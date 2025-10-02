@@ -6,23 +6,23 @@ export function watchSignal<T>(
 ): WritableSignal<T> {
   const s: WritableSignal<T> = signal<T>(initial);
 
-  const signalSet: (value: T) => void = s.set;
+  const refOnSignalSet: (value: T) => void = s.set;
 
-  (s as WritableSignal<T>).set = (val: T) => {
+  s.set = (val: T) => {
     const prev: T = untracked(s);
 
-    signalSet(val);
+    refOnSignalSet(val);
 
     if (!Object.is(prev, val)) {
       untracked(() => cb(val, prev));
     }
   };
 
-  (s as WritableSignal<T>).update = (fn: (v: T) => T) => {
+  s.update = (updateFn: (value: T) => T) => {
     const prev: T = untracked(s);
-    const next: T = fn(prev);
+    const next: T = updateFn(prev);
 
-    signalSet(next);
+    refOnSignalSet(next);
 
     if (!Object.is(prev, next)) {
       untracked(() => cb(next, prev));

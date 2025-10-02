@@ -23,7 +23,7 @@ export class App implements OnInit {
 
   protected onClick(): void {
     this.count.update(v => v + 1);
-    this.count2.set(this.count2() + 1);
+    this.count2.set(this.count2() + 2);
   }
 
   private watchHandlers(val: number, prevVal: number): void {
